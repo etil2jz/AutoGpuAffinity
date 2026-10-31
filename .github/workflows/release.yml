@@ -25,16 +25,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12.1
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Install pyinstaller
-        run: python -m pip install pyinstaller
+      - name: Check version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          $crateVersion = ((cargo metadata --no-deps --format-version 1 | ConvertFrom-Json).packages | Where-Object name -eq 'autogpuaffinity').version
+          if ($env:VERSION.TrimStart("v") -ne $crateVersion) {
+            throw "release version $env:VERSION does not match the version in Cargo.toml ($crateVersion)"
+          }
 
-      - name: Install dependencies
-        run: python -m pip install -r requirements.txt
+      - name: Run tests
+        run: cargo test --workspace --locked
 
       - name: Build
         run: .\build.ps1

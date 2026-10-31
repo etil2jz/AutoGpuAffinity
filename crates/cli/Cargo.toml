@@ -1,0 +1,19 @@
+[package]
+name = "autogpuaffinity"
+description = "Benchmark every CPU core to find the best interrupt affinity for the graphics driver"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+autogpuaffinity-domain.workspace = true
+autogpuaffinity-windows.workspace = true
+chrono.workspace = true
+clap.workspace = true
+
+[lints]
+workspace = true

@@ -1,4 +1,5 @@
 AutoGpuAffinity/lava.log
 AutoGpuAffinity/captures
-*.pyc
+AutoGpuAffinity/affinity-backup.*
 build/
+target/

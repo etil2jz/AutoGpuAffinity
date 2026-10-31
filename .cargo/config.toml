@@ -1,0 +1,17 @@
+# Single rustflags source on purpose: any target.<triple>.rustflags entry would replace these entirely.
+[build]
+rustflags = ["-C", "target-cpu=x86-64", "-C", "target-feature=+crt-static"]
+
+[target.x86_64-pc-windows-gnullvm]
+linker = "clang"
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+strip = "debuginfo"

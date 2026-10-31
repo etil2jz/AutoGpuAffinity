@@ -10,19 +10,17 @@
 ## Usage
 
 ```
-AutoGpuAffinity
-GitHub - https://github.com/valleyofdoom
+Usage: AutoGpuAffinity [OPTIONS]
 
-usage: AutoGpuAffinity [-h] [--config <config>] [--analyze <csv directory>] [--apply-affinity <cpu>]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --config <config>     path to config file
-  --analyze <csv directory>
-                        analyze csv files from a previous benchmark
-  --apply-affinity <cpu>
-                        assign a single core affinity to graphics drivers
+Options:
+      --config <config>          path to config file
+      --analyze <csv directory>  analyze csv files from a previous benchmark
+      --apply-affinity <cpu>     assign a single core affinity to graphics drivers
+  -h, --help                     Print help
+  -V, --version                  Print version
 ```
+
+- Windows 10 or later is required
 
 - Windows Performance Toolkit from the Windows ADK must be installed for DPC/ISR logging with xperf (this is entirely optional)
 
@@ -40,7 +38,13 @@ optional arguments:
 
 - Run **AutoGpuAffinity** through the command-line and press enter when ready to start benchmarking
 
-- After the tool has benchmarked each core, the GPU affinity will be reset to the Windows default and a table will be displayed with the results. Green values indicate the highest value and yellow indicates the second-highest value for a given metric. The xperf report can be found in the session directory
+- After the tool has benchmarked each core, the GPU affinity will be restored to the policy that was configured before the benchmark and a table will be displayed with the results. Green values indicate the highest value and yellow indicates the second-highest value for a given metric. The xperf report can be found in the session directory
+
+## Interrupted Sessions
+
+The original affinity policy of the graphics cards is saved to ``affinity-backup.ini`` before benchmarking and restored when the benchmark ends, fails or is cancelled with ``Ctrl+C``. If the program could not restore it (e.g. the system crashed or the GPU driver stopped responding), it is restored automatically the next time AutoGpuAffinity is launched.
+
+When a benchmark fails, the measurements of the CPUs that were already completed are kept and can be analyzed with ``--analyze``.
 
 ## Analyze Old Sessions
 
@@ -52,4 +56,8 @@ AutoGpuAffinity --analyze ".\captures\AutoGpuAffinity-170523162424\CSVs\"
 
 ## Standalone Benchmarking
 
-AutoGpuAffinity can be used as a regular benchmark if **custom_cores** is set to a single core in ``config.ini``. If you do not usually configure the GPU driver affinity, the array can be set to ``[0]`` as the graphics kernel typically runs on CPU 0 by default. This results in an automated benchmark that is completely independent to benchmarking the GPU driver affinity. Keep in mind that AutoGpuAffinity resets the affinity policy to the default Windows state once the benchmark has ended (which is no specified affinity) so don't forget to reconfigure your affinity policy afterwards again if applicable.
+AutoGpuAffinity can be used as a regular benchmark if **custom_cpus** is set to a single core in ``config.ini``. If you do not usually configure the GPU driver affinity, the array can be set to ``[0]`` as the graphics kernel typically runs on CPU 0 by default. This results in an automated benchmark that is completely independent to benchmarking the GPU driver affinity. Your existing affinity policy is restored once the benchmark has ended.
+
+## Building From Source
+
+Install [Rust](https://rustup.rs) and run ``.\build.ps1``. The package is created in ``.\build\AutoGpuAffinity\``. Run ``cargo test --workspace`` to execute the unit tests.

@@ -1,0 +1,41 @@
+[workspace]
+resolver = "3"
+members = ["crates/domain", "crates/windows", "crates/cli"]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.95"
+license = "GPL-3.0-only"
+repository = "https://github.com/valleyofdoom/AutoGpuAffinity"
+publish = false
+
+[workspace.dependencies]
+autogpuaffinity-domain = { path = "crates/domain" }
+autogpuaffinity-windows = { path = "crates/windows" }
+anstyle-query = "1.1.5"
+anyhow = "1.0.104"
+check_elevation = "0.3.0"
+chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
+clap = { version = "4.6.7", features = ["derive"] }
+csv = "1.4.0"
+ctrlc = "3.5.2"
+serde = { version = "1.0.229", features = ["derive"] }
+sysinfo = { version = "0.40.1", default-features = false, features = ["system"] }
+terminal_size = "0.4.4"
+thiserror = "2.0.21"
+win32job = "2.0.3"
+winreg = "0.56.0"
+wmi = { version = "0.18.4", default-features = false }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+expect_used = "deny"
+indexing_slicing = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+unreachable = "deny"
+unwrap_used = "deny"
